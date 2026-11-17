@@ -5,7 +5,8 @@ import { SerialConnection } from './serial.js';
 
 const ui = Object.fromEntries(['conectar', 'demo', 'iniciar', 'parar', 'aplicar', 'intervalo',
   'intervaloValor', 'fonte', 'conexao', 'estado', 'modo', 'confirmado', 'frequencia',
-  'idade', 'mensagem', 'log', 'falha', 'ledIndicador', 'avisoFonte'].map(id => [id, document.getElementById(id)]));
+  'idade', 'mensagem', 'log', 'falha', 'ledIndicador', 'avisoFonte', 'lento', 'rapido']
+  .map(id => [id, document.getElementById(id)]));
 let model;
 try { model = createBoard(document.getElementById('renderCanvas')); }
 catch { ui.mensagem.textContent = 'WebGL indisponível. O painel textual permanece disponível.'; }
@@ -41,7 +42,9 @@ function render() {
   ui.confirmado.textContent = fresh && state.period !== null ? `${state.period} ms` : '—';
   ui.frequencia.textContent = fresh && state.period !== null ? `${(1000 / state.period).toFixed(2).replace('.', ',')} Hz` : '—';
   ui.idade.textContent = state.lastState === null ? '—' : `${((now - state.lastState) / 1000).toFixed(1)} s${fresh ? '' : ' · vencido'}`;
-  for (const id of ['iniciar', 'parar', 'intervalo', 'aplicar']) ui[id].disabled = busy || !active || !fresh;
+  for (const id of ['iniciar', 'parar', 'intervalo', 'aplicar', 'lento', 'rapido']) {
+  ui[id].disabled = busy || !active || !fresh;
+  }
   ui.conectar.disabled = busy; ui.demo.disabled = busy;
   ui.conectar.textContent = busy ? 'AGUARDE…' : source === 'usb' ? 'DESCONECTAR USB' : 'CONECTAR ESP32';
   ui.demo.textContent = source === 'demo' ? 'ENCERRAR DEMO' : 'INICIAR DEMO';
@@ -119,6 +122,17 @@ async function send(command) {
 ui.conectar.addEventListener('click', connect);
 ui.demo.addEventListener('click', toggleDemo);
 ui.iniciar.addEventListener('click', () => send('B'));
+ui.lento.addEventListener('click', () => {
+  ui.intervalo.value = 2000;
+  ui.intervaloValor.textContent = '2000 ms';
+  send('T:2000');
+});
+
+ui.rapido.addEventListener('click', () => {
+  ui.intervalo.value = 200;
+  ui.intervaloValor.textContent = '200 ms';
+  send('T:200');
+});
 ui.parar.addEventListener('click', () => send('P'));
 ui.aplicar.addEventListener('click', () => send(`T:${ui.intervalo.value}`));
 ui.intervalo.addEventListener('input', () => { ui.intervaloValor.textContent = `${ui.intervalo.value} ms`; });

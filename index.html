@@ -22,12 +22,16 @@
       <label for="intervalo">Período solicitado <output id="intervaloValor">1000 ms</output></label>
       <input id="intervalo" type="range" min="100" max="2000" step="100" value="1000" disabled>
       <div class="escala"><span>100 ms / 10 Hz</span><span>2000 ms / 0,5 Hz</span></div>
-      <button id="aplicar" disabled>APLICAR PERÍODO</button>
+        <button id="aplicar" disabled>APLICAR PERÍODO</button>
+      <div class="acoes">
+        <button id="lento" disabled>LENTO · 2000 ms</button>
+        <button id="rapido" disabled>RÁPIDO · 200 ms</button>
+      </div>
       <div class="acoes"><button id="iniciar" class="green" disabled>INICIAR PISCA</button><button id="parar" class="red" disabled>PARAR E APAGAR</button></div>
       <button id="falha" disabled>SIMULAR PERDA DE DADOS</button>
       <p id="mensagem" role="status">A placa começa piscando após a gravação, mesmo sem o navegador.</p>
     </section>
-    <section class="protocolo"><div><h2>O caminho de cada comando</h2><p>Navegador → USB → ESP32 → GPIO 2 → resposta serial → LED virtual</p></div><code>B iniciar &nbsp; P parar &nbsp; T:500 período &nbsp; S consultar</code><details><summary>Ver mensagens transmitidas e recebidas</summary><pre id="log"></pre></details></section>
+    <section class="protocolo"><div><h2>O caminho de cada comando</h2><p>Navegador → USB → ESP32 → GPIO 2 → resposta serial → LED virtual</p></div><code>B iniciar   P parar   T:500 período   S consultar</code><details><summary>Ver mensagens transmitidas e recebidas</summary><pre id="log"></pre></details></section>
   </main>
   <footer>Estado reportado pelo firmware não é uma medição óptica do LED. Observe a placa durante o comissionamento.</footer>
   <script type="module" src="/src/main.js"></script>
